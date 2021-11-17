@@ -1,0 +1,19 @@
+{
+  "name": "baikbingo-cache",
+  "version": "1.0.0",
+  "description": "Baikbingo 基于indexedDB的缓存解决",
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "build:link": "rollup --config rollup.config.js && npm link",
+    "publish": "npm run rollup-build && npm publish",
+    "lint": "eslint --ext .js --ignore-path .gitignore --fix src",
+    "format": "prettier .  --write"
+  },
+  "keywords": [],
+  "author": "zmkwjx",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "typedoc": "^0.22.9"
+  }
+}

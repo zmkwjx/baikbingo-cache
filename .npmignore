@@ -1,0 +1,22 @@
+node_modules
+.DS_Store
+dist-preview
+package-lock.json
+*.local
+
+plugin
+public
+src
+.env.development
+.gitignore
+env.d.ts
+index.html
+package-lock.json
+rollup.config.js
+vite.config.js
+typedoc.json
+doc
+
+# Editor directories and files
+.vscode
+# *.sw?
