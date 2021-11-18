@@ -12,16 +12,28 @@ const banner = `/*
 export default {
   input: "plugin/index.js",
   output: [
-    // CommonJS，适用于 Node 和 Browserify/Webpack
     {
-      file: "lib/bundle.cjs.js",
-      format: "cjs",
+      name: "@baikbingo/cache",
+      file: "lib/bundle.umd.js",
+      format: "umd",
+      sourcemap: true,
+      extend: true,
       banner
     },
-    // 将软件包保存为 ES 模块文件，在现代浏览器中可以通过 <script type=module> 标签引入
     {
+      name: "@baikbingo/cache",
       file: "lib/bundle.esm.js",
-      format: "es",
+      format: "esm",
+      sourcemap: true,
+      extend: true,
+      banner
+    },
+    {
+      name: "@baikbingo/cache",
+      file: "lib/bundle.min.js",
+      format: "iife",
+      sourcemap: true,
+      extend: true,
       banner
     }
   ],

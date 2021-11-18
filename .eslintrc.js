@@ -6,10 +6,7 @@ module.exports = {
     es6: true
   },
   parser: "babel-eslint",
-  plugins: [
-    "import"
-  ],
-  extends: ["eslint:recommended", "plugin:import/recommended", "plugin:import/errors", "plugin:import/warnings"],
+  extends: ["eslint:recommended"],
   rules: {
     "no-console": "off",
     strict: 0,
@@ -26,11 +23,6 @@ module.exports = {
         functions: "never"
       }
     ],
-    "max-len": [2, { code: 300 }],
-    "import/no-unresolved": [2, {commonjs: true, amd: true}],
-    "import/named": 2,
-    "import/namespace": 2,
-    "import/default": 2,
-    "import/export": 2
+    "max-len": [2, { code: 300 }]
   }
 };
