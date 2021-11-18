@@ -8,8 +8,8 @@
   "scripts": {
     "build": "npm run lint && rollup --config rollup.config.js",
     "build:link": "npm run lint && npm run build && npm link",
-    "publish": "npm run lint && npm run build && npm publish",
-    "publishBeta": "npm run lint && npm run build && npm publish --tag=beta",
+    "publish": "npm run lint && npm run build && npm publish --access public",
+    "publishBeta": "npm run publish --tag=beta",
     "lint": "eslint --ext .js --ignore-path .gitignore --fix plugin",
     "format": "prettier .  --write"
   },
