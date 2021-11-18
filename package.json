@@ -1,6 +1,6 @@
 {
   "name": "@baikbingo/cache",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "description": "Baikbingo 基于indexedDB的缓存解决",
   "main": "lib/bundle.umd.js",
   "module": "lib/bundle.esm.js",
@@ -8,8 +8,8 @@
   "scripts": {
     "build": "npm run lint && rollup --config rollup.config.js",
     "build:link": "npm run lint && npm run build && npm link",
-    "publish": "npm run lint && npm run build && npm publish --access public",
-    "publishBeta": "npm run lint && npm run build && npm publish --tag beta --access public",
+    "doPublish": "npm run lint && npm run build && npm publish --access public",
+    "doPublishBeta": "npm run doPublish --tag beta",
     "lint": "eslint --ext .js --ignore-path .gitignore --fix plugin",
     "format": "prettier .  --write"
   },
