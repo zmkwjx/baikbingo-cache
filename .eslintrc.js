@@ -1,14 +1,17 @@
 module.exports = {
   env: {
-    node: true
+    browser: true,
+    node: true,
+    jasmine: true,
+    es6: true
   },
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true
-    }
-  },
-  extends: ["eslint:recommended", "plugin:vue/vue3-recommended", "prettier"],
+  parser: "babel-eslint",
+  plugins: [
+    "import"
+  ],
+  extends: ["eslint:recommended", "plugin:import/recommended", "plugin:import/errors", "plugin:import/warnings"],
   rules: {
+    "no-console": "off",
     strict: 0,
     quotes: [1, "double"],
     camelcase: 0,
@@ -24,9 +27,10 @@ module.exports = {
       }
     ],
     "max-len": [2, { code: 300 }],
-    "vue/name-property-casing": 0,
-    "vue/component-definition-name-casing": 0
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
+    "import/no-unresolved": [2, {commonjs: true, amd: true}],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2
   }
 };
