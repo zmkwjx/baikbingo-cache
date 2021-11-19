@@ -17,6 +17,10 @@ vite.config.js
 typedoc.json
 doc
 
+.eslintignore
+.eslintrc.js
+.prettierrc.json
+
 # Editor directories and files
 .vscode
 # *.sw?

@@ -1,16 +1,10 @@
 export default class Cache {
-  databaseName = "cache"; // 数据库名称
-  tableName = "localStorage"; // 表名
-  version = 1; // 版本号
-
-  db = null; // 数据库对象
-  queue = null; // 队列
-  source = {} // 源数据=》内存
-
   constructor(params = {}) {
-    params.databaseName && (this.databaseName = params.databaseName);
-    params.tableName && (this.tableName = params.tableName);
-    params.version && (this.version = params.version);
+    this.databaseName = params.databaseName || "cache";     // 数据库名称
+    this.tableName = params.databaseName || "localStorage"; // 表名
+    this.version = params.version || 1;                     // 版本号
+    this.db = null;                                         // 数据库对象
+    this.source = {}                                        // 源数据=》内存
     this.init();
   }
 

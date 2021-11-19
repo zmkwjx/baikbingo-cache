@@ -1,6 +1,7 @@
 import config from "./package.json";
-import commonjs from "rollup-plugin-commonjs"
-import resolve from "rollup-plugin-node-resolve"
+import babel from "rollup-plugin-babel";
+import commonjs from "rollup-plugin-commonjs";
+import resolve from "rollup-plugin-node-resolve";
 import json from "rollup-plugin-json";
 
 // 构建信息
@@ -41,8 +42,13 @@ export default {
     }
   ],
   plugins: [
-    resolve(),
+    resolve({
+      browser: true
+    }),
+    json(),
     commonjs(),
-    json()
+    babel({
+      exclude: "node_modules/**"
+    })
   ]
 };
