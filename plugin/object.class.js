@@ -5,6 +5,7 @@ export default class Cache {
 
   db = null; // 数据库对象
   queue = null; // 队列
+  source = {} // 源数据=》内存
 
   constructor(params = {}) {
     params.databaseName && (this.databaseName = params.databaseName);
@@ -17,6 +18,7 @@ export default class Cache {
   async init() {
     try {
       this.db = await this.open();
+      this.readAll();
       console.log(`loaded cache，version ${this.version}`);
     } catch (e) {
       this.error(e);
@@ -52,15 +54,6 @@ export default class Cache {
     console.log(new Error(e));
   }
 
-  // 同步方法
-  async sync(action, ...params) {
-    try {
-      await this[action](...params);
-    } catch (e) {
-      this.error(e);
-    }
-  }
-
   // 设置数据
   async set(key, value) {
     try {
@@ -75,23 +68,32 @@ export default class Cache {
       return Promise.reject(e);
     }
   }
+  async syncSet(key, value) {
+    const res = await this.set(key, value);
+    return res;
+  }
 
   // 新增
   async add(key, value) {
     this.db = await this.open();
     return new Promise((resolve, reject) => {
       let request = this.handler("readwrite").add({ key, value });
-      request.onsuccess = (e) => resolve(e);
+      request.onsuccess = (e) => {
+        this.source[key] = value;
+        resolve(e)
+      };
       request.onerror = (e) => reject(e);
     });
   }
-
   // 更新数据
   async update(key, value) {
     this.db = await this.open();
     return new Promise((resolve, reject) => {
       let request = this.handler("readwrite").put({ key, value });
-      request.onsuccess = (e) => resolve(e);
+      request.onsuccess = (e) => {
+        this.source[key] = value;
+        resolve(e)
+      };
       request.onerror = (e) => reject(e);
     });
   }
@@ -99,11 +101,19 @@ export default class Cache {
   // 返回数据
   async get(key) {
     this.db = await this.open();
-    return new Promise((resolve, reject) => {
-      let request = this.handler("readonly").get(key);
-      request.onsuccess = (e) => resolve(e.target.result);
-      request.onerror = (e) => reject(e);
-    });
+    const value = this.syncGet(key);
+    if (value) {
+      return Promise.resolve(value);
+    } else {
+      return new Promise((resolve, reject) => {
+        let request = this.handler("readonly").get(key);
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e);
+      });
+    }
+  }
+  syncGet(key) {
+    return this.source[key] || null;
   }
 
   // 删除数据
@@ -113,7 +123,10 @@ export default class Cache {
       if (res) {
         return new Promise((resolve, reject) => {
           let request = this.handler("readwrite").delete(key);
-          request.onsuccess = (e) => resolve(e);
+          request.onsuccess = (e) => {
+            delete this.source[key];
+            resolve(e)
+          };
           request.onerror = (e) => reject(e);
         });
       } else {
@@ -124,20 +137,49 @@ export default class Cache {
       return Promise.reject(e);
     }
   }
+  async syncDel(key) {
+    const res = await this.del(key);
+    return res;
+  }
 
   // 清空数据
   clear() {
     return new Promise((resolve, reject) => {
       const { databaseName } = this;
       let request = window.indexedDB.deleteDatabase(databaseName);
+      request.onsuccess = (e) => {
+        this.source = null;
+        resolve(e)
+      };
       request.onerror = (e) => reject(e);
-      request.onsuccess = (e) => resolve(e);
     });
+  }
+  async syncClear() {
+    const res = await this.clear();
+    return res;
   }
 
   // 操作
   handler(mode = "readonly") {
     const { tableName } = this;
     return this.db.transaction([tableName], mode).objectStore(tableName);
+  }
+
+  // 遍历数据
+  async readAll() {
+    this.db = await this.open();
+    return new Promise(resolve => {
+      let request = this.handler();
+      request.openCursor().onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+          this.source[cursor.key] = cursor.value.value;
+          cursor.continue();
+        } else {
+          console.log("数据遍历完毕");
+          resolve();
+        }
+      }
+    })
   }
 }

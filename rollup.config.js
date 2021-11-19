@@ -1,4 +1,7 @@
 import config from "./package.json";
+import commonjs from "rollup-plugin-commonjs"
+import resolve from "rollup-plugin-node-resolve"
+import json from "rollup-plugin-json";
 
 // 构建信息
 const banner = `/* 
@@ -13,7 +16,7 @@ export default {
   input: "plugin/index.js",
   output: [
     {
-      name: "@baikbingo/cache",
+      name: "bundle.umd.js",
       file: "lib/bundle.umd.js",
       format: "umd",
       sourcemap: true,
@@ -21,7 +24,7 @@ export default {
       banner
     },
     {
-      name: "@baikbingo/cache",
+      name: "bundle.esm.js",
       file: "lib/bundle.esm.js",
       format: "esm",
       sourcemap: true,
@@ -29,7 +32,7 @@ export default {
       banner
     },
     {
-      name: "@baikbingo/cache",
+      name: "bundle.min.js",
       file: "lib/bundle.min.js",
       format: "iife",
       sourcemap: true,
@@ -37,5 +40,9 @@ export default {
       banner
     }
   ],
-  plugins: []
+  plugins: [
+    resolve(),
+    commonjs(),
+    json()
+  ]
 };
