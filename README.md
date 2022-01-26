@@ -7,9 +7,13 @@ import { createCache } from "@baikbingo/cache";
 const cahce = createCache({
   databaseName： "cache", // 数据库名称
   tableName: "localStorage", // 表名
+  memory: true, // 内存接管
   version: 1 // 版本号
 });
 ```
+
+memory如果关闭内存接管则无法使用所有同步方法
+
 
 ### 获取缓存操作
 

@@ -3,16 +3,26 @@ export default class Cache {
     this.databaseName = params.databaseName || "cache";     // 数据库名称
     this.tableName = params.databaseName || "localStorage"; // 表名
     this.version = params.version || 1;                     // 版本号
+    this.memory = params.memory === false ? false : true;   // 是否启用内存接管
     this.db = null;                                         // 数据库对象
     this.source = {}                                        // 源数据=》内存
     this.init();
+  }
+
+  // 源数据内存接管
+  setSource(key, value) {
+    if (this.source && this.memory) {
+      this.source[key] = value;
+    } else {
+      this.source = {}
+    }
   }
 
   // 初始化
   async init() {
     try {
       this.db = await this.open();
-      this.readAll();
+      this.memory && this.readAll();
       console.log(`loaded cache，version ${this.version}`);
     } catch (e) {
       this.error(e);
@@ -162,16 +172,18 @@ export default class Cache {
   // 遍历数据
   async readAll() {
     this.db = await this.open();
+    let source = {};
     return new Promise(resolve => {
       let request = this.handler();
       request.openCursor().onsuccess = (e) => {
         const cursor = e.target.result;
         if (cursor) {
-          this.source[cursor.key] = cursor.value.value;
+          source[cursor.key] = cursor.value.value
+          this.setSource(cursor.key, cursor.value.value);
           cursor.continue();
         } else {
           console.log("数据遍历完毕");
-          resolve();
+          resolve(source);
         }
       }
     })
