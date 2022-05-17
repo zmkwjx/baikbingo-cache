@@ -1,6 +1,6 @@
 {
   "name": "@baikbingo/cache",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Baikbingo 基于indexedDB的缓存解决",
   "main": "lib/bundle.umd.js",
   "module": "lib/bundle.esm.js",

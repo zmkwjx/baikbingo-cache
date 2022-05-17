@@ -117,7 +117,7 @@ export default class Cache {
     }
   }
   syncGet(key) {
-    return this.source[key] || null;
+    return this.source[key] === undefined ? null : this.source[key];
   }
 
   // 删除数据
