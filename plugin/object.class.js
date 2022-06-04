@@ -1,7 +1,7 @@
 export default class Cache {
   constructor(params = {}) {
     this.databaseName = params.databaseName || "cache";     // 数据库名称
-    this.tableName = params.databaseName || "localStorage"; // 表名
+    this.tableName = params.tableName || "localStorage"; // 表名
     this.version = params.version || 1;                     // 版本号
     this.memory = params.memory === false ? false : true;   // 是否启用内存接管
     this.db = null;                                         // 数据库对象
